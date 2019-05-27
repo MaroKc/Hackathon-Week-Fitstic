@@ -1,7 +1,7 @@
 <?php
 header('Content-typ: content="text/html; charset=UTF-8');
-$rawText = strtolower("Sto cercando su google perchè google è il migliore");
-//$rawText = strtolower($_REQUEST['testo']);
+//$rawText = strtolower("Sto cercando su google perchè google è il migliore");
+$rawText = strtolower($_REQUEST['testo']);
 
 //echo $rawText;
 
@@ -34,7 +34,12 @@ foreach($textSplitted as $tmp){
 
 arsort($world);
 
-echo (json_encode($world));
+$arrayJSON = array();
+
+foreach($world as $key => $value) 
+    array_push( $arrayJSON, array('word' => $key, 'occ' => $value) );
+
+echo (json_encode($arrayJSON));
 
 /*
 exit();
