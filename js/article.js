@@ -2,10 +2,11 @@ $(document).ready(function() {
 
     $("#analix").on('click', function() {
 
-        $("#ris").html("");
+        $("#ris-table").html("");
+        $("#ris-testo").html("");
 
         $.ajax({
-            url: "file.php", 
+            url: "inc/articleText.php", 
             type: "get",
             //dataType: "json", 
             data : { 
@@ -16,16 +17,18 @@ $(document).ready(function() {
 
             var diz = jQuery.parseJSON(data);
 
-            console.log(diz.values);
-
-            JSON.parse(data).forEach(function(item){
-                $("#ris").append(
-                    '<button type="button" class="btn btn-info m-1">' +
-                        item.word+ ' <span class="badge badge-dark"> ' +item.occ+'</span>' +
-                    '</button>'
+            diz[0].forEach(function(item){
+                $("#ris-table").append(
+                    '<tr>'+
+                    '<th scope="row">'+item.word+'</th>'+
+                    '<td>'+item.occ+'</td>'+
+                    '</tr>'
                 );
             });
 
+            $("#ris-testo").append(
+                diz[1]
+            );
 
         })
         .fail(function() {
@@ -33,5 +36,7 @@ $(document).ready(function() {
         });
 
     });
+
+    //<p class="blockquote">dasdasd ad adas d </p>
 
 })
