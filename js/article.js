@@ -36,6 +36,19 @@ function nuvoletta(words) {
 
 $(document).ready(function() {
 
+    let lan;
+    $(".select-lang").on('click', function() {
+
+        $("#lingua").val($(this).attr('id'));
+
+        if(lan != null) 
+            $(lan).removeClass("focus-lang");
+
+        $(this).addClass("focus-lang");
+        lan = this;
+
+    })
+
     $("#analix_text").on('click', function() {
 
         $("#ris-table").html("");
@@ -46,6 +59,7 @@ $(document).ready(function() {
             type: "get",
             //dataType: "json", 
             data : { 
+                leng : $("#lingua").val(),
                 testo: $("#testo").val()
             }
         })
@@ -86,7 +100,8 @@ $(document).ready(function() {
             url: "inc/articleUrl.php", 
             type: "get",
             //dataType: "json", 
-            data : { 
+            data : {
+                leng : $("#lingua").val(), 
                 testo: $("#url_art").val()
             }
         })

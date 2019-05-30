@@ -22,6 +22,9 @@
 
 
 <style>
+.focus-lang {
+  background-color: green !important;
+}
 hr {
   background-color: tan;
 } 
@@ -193,6 +196,13 @@ margin-right: 10rem !important;
             <p>Scrivi il testo di un articolo che vuoi analizzare</p>
           </div>
 
+          <div class='btn-group'> <!-- Change language -->
+            <button type='button' class='btn btn-circle btn-primary select-lang' id='it'>IT</button>
+            <button type='button' class='btn btn-circle btn-primary select-lang' id='en'>EN</button>
+          </div> <!-- End change language -->
+
+          <input type="hidden" id="lingua" value="it">
+
           <button class="btn btn-info btn-lg mx-auto d-block" style="width: 150px" role="button" id="analix_text">Controlla</button>
 
         </div>
@@ -213,7 +223,7 @@ margin-right: 10rem !important;
           <div class="description text-center">
             <p>Scrivi l'url del tasto da analizzare</p>
           </div>
-  
+
           <button class="btn btn-info btn-lg mx-auto d-block" style="width: 150px" role="button" id="analix_url">Controlla</button>
 
         </div>

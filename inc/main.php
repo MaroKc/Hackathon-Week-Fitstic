@@ -5,7 +5,7 @@ define("MAX_WORD", 15);
 
 function filtro_testo($text) {
 
-    $saneText = sanificate_text($text);
+    $saneText = sanificate_text($text, $_REQUEST['leng']);
 
     $arrayJSON = create_JSON($saneText);
 
@@ -27,10 +27,10 @@ function text_bold($text, $word){
 
 }
 
-function sanificate_text($textRAW) {
+function sanificate_text($textRAW, $lang) {
 
     $file_js = json_decode(file_get_contents("stop-word.json"), true);
-    $noWord = $file_js['stop-word'];
+    $noWord = $file_js[$lang];
     
     $textRAW = str_replace(array(".",",",":","?","!","'",'"'), "", $textRAW); 
     $textRAW = trim($textRAW);
