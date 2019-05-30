@@ -11,13 +11,14 @@ function filtro_testo($text) {
 
     $txtBOLD = text_bold($text, $arrayJSON);
 
-    return array($arrayJSON, $txtBOLD);
+    return array('stat' => $arrayJSON, 'bold' => $txtBOLD);
 }
+
 
 function text_bold($text, $word){
 
     foreach($word as $oneWord)
-        $text = preg_replace('/\b'.$oneWord['word'].'\b/', '<strong>'.$oneWord['word'].'</strong>', $text);
+        $text = preg_replace('/\b'.$oneWord['text'].'\b/', '<strong>'.$oneWord['text'].'</strong>', $text);
 
 
     $text = ucfirst($text);
@@ -31,23 +32,21 @@ function sanificate_text($textRAW) {
     $file_js = json_decode(file_get_contents("stop-word.json"), true);
     $noWord = $file_js['stop-word'];
     
-    $textRAW = str_replace(array(".",",",":","?","!","'"), "", $textRAW);
-    
+    $textRAW = str_replace(array(".",",",":","?","!","'",'"'), "", $textRAW); 
+    $textRAW = trim($textRAW);
+
+    $textSplitted = explode(" ", $textRAW);
+
     foreach($noWord as $oneWord) 
-        $textRAW = preg_replace('/\b'.$oneWord.'\b/', "-", $textRAW);
-    
-    
-    $saneText = trim($textRAW);
+        while(($key = array_search($oneWord, $textSplitted)) !== false)
+            unset($textSplitted[$key]);
 
-    //echo $saneText;
 
-    return $saneText;
+    return $textSplitted;
 
 }
 
-function create_JSON($textSANE) {
-
-    $textSplitted = explode(" ", $textSANE);
+function create_JSON($textSplitted) {
     
     $world = array();
       
@@ -70,7 +69,7 @@ function create_JSON($textSANE) {
 
     foreach($impWord[0] as $key => $value)
         if($value > 1)
-            array_push( $arrayJSON, array('word' => $key, 'occ' => $value) );
+            array_push( $arrayJSON, array('text' => $key, 'count' => $value) );
 
 
     return $arrayJSON;
@@ -84,3 +83,61 @@ function get_text_between_tags($textRAW, $tag) {
         return $ris[1];
     return array();
 }
+
+/*
+function getSize($percent) {
+     
+    $size = "font-size: ";
+ 
+    if ($percent >= 99)
+        $size .= "4em;";
+    else if ($percent >= 95)
+        $size .= "3.8em;";
+    else if ($percent >= 80)
+        $size .= "3.5em;";
+    else if ($percent >= 70)
+        $size .= "3em;";
+    else if ($percent >= 60)
+        $size .= "2.8em;";
+    else if ($percent >= 50)
+        $size .= "2.5em;";
+    else if ($percent >= 40)
+        $size .= "2.3em;";
+    else if ($percent >= 30)
+        $size .= "2.1em;";
+    else if ($percent >= 25)
+        $size .= "2.0em;";
+    else if ($percent >= 20)
+        $size .= "1.8em;";
+    else if ($percent >= 15)
+        $size .= "1.6em;";
+    else if ($percent >= 10)
+        $size .= "1.3em;";
+    else if ($percent >= 5)
+        $size .= "1.0em;";
+    else
+        $size .= "0.8em;";
+
+    return $size;
+}
+ 
+function showCloud($word, $show_freq = false)
+{
+    $max = $word[0]['occ'];
+    $out = "";
+
+    foreach ($word as $oneWord)
+    {
+        if(!empty($oneWord['word']))
+        {
+            $size = getSize(($oneWord['occ'] / $max) * 100);
+            if($show_freq) $disp_freq = "(".$freq['occ'].")"; else $disp_freq = "";
+
+            $out .= "<span style='font-family: Tahoma; padding: 4px 4px 4px 4px; letter-spacing: 3px; $size'>
+                        &nbsp; {".$oneWord['word']."}<sup>$disp_freq</sup> &nbsp; </span>";
+        }
+    }
+
+    return $out;
+}
+*/
