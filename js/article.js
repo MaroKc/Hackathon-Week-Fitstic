@@ -34,103 +34,110 @@ function nuvoletta(words) {
 
 }
 
+function pulisci () {
+
+    $("#ris-table").html("");
+    $("#ris-testo").html("");
+    $("#myChart").html("");
+
+}
+
+function get_dati(to, campo) {
+
+
+    $.ajax({
+        url: "inc/"+to+".php", 
+        type: "get",
+        //dataType: "json", 
+        data : { 
+            leng : $("#lingua").val(),
+            testo: campo
+        }
+    })
+    .done(function(data) {
+
+        var diz = jQuery.parseJSON(data);
+
+        diz['stat'].forEach(function(item){
+            $("#ris-table").append(
+                '<tr>'+
+                '<th scope="row">'+item.text+'</th>'+
+                '<td>'+item.count+'</td>'+
+                '</tr>'
+            );
+        });
+
+        let bb = "";
+        if(diz['titolo'] != null)
+            bb += '<div class="text-center h3">'+diz['titolo']+'</div>';
+
+        bb +=   '<div class="blockquote" style="overflow-y: scroll;max-height: 80vh;>"'+
+                    diz['bold']+
+                '</div>'
+
+        $("#ris-testo").append(
+            bb
+        );
+
+        nuvoletta(diz['stat']);
+
+    })
+    .fail(function() {
+        alert("error");
+    });
+
+}
+
+function start_info () {
+var intro = introJs();
+intro.setOptions({
+  steps: [
+    { 
+        intro: "Benvenuto su Find_FIX!<br>Alcune Linee Guida",
+        position: 'right',
+        
+    },
+    { 
+      element: document.querySelectorAll('.primo')[0],
+      intro: "Vuoi scrivere o inserire un Link? <br>Scegli qui!",
+      position: 'right',
+      
+    },
+    { 
+        intro: "Non dimenticarti di analizzare il testo e ricorda di controllare la cronologia delle ricerche",
+        position: 'right',
+        
+    }
+  ]
+});
+
+intro.start();
+}
+
 $(document).ready(function() {
 
-    let lan;
+    setTimeout(function(){ start_info() }, 3000);
+    
+
     $(".select-lang").on('click', function() {
 
         $("#lingua").val($(this).attr('id'));
-
-        if(lan != null) 
-            $(lan).removeClass("focus-lang");
-
+        $(".select-lang").removeClass("focus-lang");
         $(this).addClass("focus-lang");
-        lan = this;
 
     })
 
     $("#analix_text").on('click', function() {
 
-        $("#ris-table").html("");
-        $("#ris-testo").html("");
-
-        $.ajax({
-            url: "inc/articleText.php", 
-            type: "get",
-            //dataType: "json", 
-            data : { 
-                leng : $("#lingua").val(),
-                testo: $("#testo").val()
-            }
-        })
-        .done(function(data) {
-
-            var diz = jQuery.parseJSON(data);
-
-            diz['stat'].forEach(function(item){
-                $("#ris-table").append(
-                    '<tr>'+
-                    '<th scope="row">'+item.text+'</th>'+
-                    '<td>'+item.count+'</td>'+
-                    '</tr>'
-                );
-            });
-
-            $("#ris-testo").append(
-				'<div class="blockquote" style="overflow-y: scroll;max-height: 80vh;>">'+
-					diz['bold']+
-				'</div>'
-            );
-
-            nuvoletta(diz['stat']);
-
-        })
-        .fail(function() {
-            alert("error");
-        });
+        pulisci();
+        get_dati("articleText",$('#testo').val());
 
     });
 	
-	    $("#analix_url").on('click', function() {
+	$("#analix_url").on('click', function() {
 
-        $("#ris-table").html("");
-        $("#ris-testo").html("");
-		
-        $.ajax({
-            url: "inc/articleUrl.php", 
-            type: "get",
-            //dataType: "json", 
-            data : {
-                leng : $("#lingua").val(), 
-                testo: $("#url_art").val()
-            }
-        })
-        .done(function(data) {
-
-            var diz = jQuery.parseJSON(data);
-
-            diz['stat'].forEach(function(item){
-                $("#ris-table").append(
-                    '<tr>'+
-                    '<th scope="row">'+item.text+'</th>'+
-                    '<td>'+item.count+'</td>'+
-                    '</tr>'
-                );
-            });
-
-            $("#ris-testo").append(
-                '<div class="text-center h3">'+diz['titolo']+'</div>'+
-                '<div class="blockquote" style="overflow-y: scroll;max-height: 80vh;>"'+
-					diz['bold']+
-				'</div>'
-            );
-
-            nuvoletta(diz['stat']);
-
-        })
-        .fail(function() {
-            alert("error");
-        });
+        pulisci();
+        get_dati("articleUrl", $('#url_art').val() );
 
     });
 

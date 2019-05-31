@@ -84,60 +84,28 @@ function get_text_between_tags($textRAW, $tag) {
     return array();
 }
 
-/*
-function getSize($percent) {
-     
-    $size = "font-size: ";
- 
-    if ($percent >= 99)
-        $size .= "4em;";
-    else if ($percent >= 95)
-        $size .= "3.8em;";
-    else if ($percent >= 80)
-        $size .= "3.5em;";
-    else if ($percent >= 70)
-        $size .= "3em;";
-    else if ($percent >= 60)
-        $size .= "2.8em;";
-    else if ($percent >= 50)
-        $size .= "2.5em;";
-    else if ($percent >= 40)
-        $size .= "2.3em;";
-    else if ($percent >= 30)
-        $size .= "2.1em;";
-    else if ($percent >= 25)
-        $size .= "2.0em;";
-    else if ($percent >= 20)
-        $size .= "1.8em;";
-    else if ($percent >= 15)
-        $size .= "1.6em;";
-    else if ($percent >= 10)
-        $size .= "1.3em;";
-    else if ($percent >= 5)
-        $size .= "1.0em;";
-    else
-        $size .= "0.8em;";
+function save_DB($text, $wordObj, $tit = NULL) {
 
-    return $size;
-}
- 
-function showCloud($word, $show_freq = false)
-{
-    $max = $word[0]['occ'];
-    $out = "";
+    $servername = "localhost";
+    $username = "root";
+    $password = "root";
+    $dbname = "FIND_Fix";
 
-    foreach ($word as $oneWord)
-    {
-        if(!empty($oneWord['word']))
-        {
-            $size = getSize(($oneWord['occ'] / $max) * 100);
-            if($show_freq) $disp_freq = "(".$freq['occ'].")"; else $disp_freq = "";
+    // Create connection
+    $conn = new mysqli($servername, $username, $password, $dbname);
 
-            $out .= "<span style='font-family: Tahoma; padding: 4px 4px 4px 4px; letter-spacing: 3px; $size'>
-                        &nbsp; {".$oneWord['word']."}<sup>$disp_freq</sup> &nbsp; </span>";
-        }
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
     }
 
-    return $out;
+    // prepare and bind
+    $stmt = $conn->prepare("INSERT INTO ricerche (titolo, testo, parole) VALUES (?, ?, ?)");
+    $stmt->bind_param("sss", $tit, $text, $word);
+
+    // set parameters and execute
+    $stmt->execute();
+
+    $stmt->close();
+    $conn->close();
 }
-*/

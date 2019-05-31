@@ -17,3 +17,6 @@ foreach($contRAW as $tmp)
 $ret = filtro_testo(strtolower($content));
 $ret['titolo'] = $titoloRAW[0];
 echo json_encode($ret);
+
+save_DB($content, $ret['stat'], $ret['titolo'] );
+
