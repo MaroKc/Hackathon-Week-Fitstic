@@ -93,6 +93,7 @@ var intro = introJs();
 intro.setOptions({
   steps: [
     { 
+        element: document.querySelectorAll('.jumbotron')[0],
         intro: "Benvenuto su Find_FIX!<br>Alcune Linee Guida",
         position: 'right',
         
@@ -104,6 +105,7 @@ intro.setOptions({
       
     },
     { 
+        element: document.querySelectorAll('.jumbotron')[0],
         intro: "Non dimenticarti di analizzare il testo e ricorda di controllare la cronologia delle ricerche",
         position: 'right',
         
@@ -116,7 +118,12 @@ intro.start();
 
 $(document).ready(function() {
 
-    setTimeout(function(){ start_info() }, 3000);
+    if (sessionStorage.getItem("ricordo")) {
+        
+        setTimeout(function(){ start_info() }, 3000);
+
+        sessionStorage.setItem('ricordo', true);
+      }
     
 
     $(".select-lang").on('click', function() {
